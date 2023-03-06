@@ -11,6 +11,12 @@ const customers = []
 app.post("/account", (request, response) => {
    const { cpf, name} = request.body;
 
+   const customersAlreadyExist = customers.some((customer) => customer.cpf === cpf);
+
+   if(customersAlreadyExist) {
+    return response.status(400).json({message: "Customer already exists!"})
+   }
+
    customers.push({
     cpf,
     name,
