@@ -86,7 +86,7 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
   if(balance < amount) {
     return response.status(400).json({ error: "Insufficient funds"})
   }
-  
+
   const statementOperation = {
     amount,
     created_at: new Date(),
@@ -96,7 +96,18 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
   customer.statement.push(statementOperation);
 
   return response.status(200).send()
-})
+});
+
+app.get("/statement/date", verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request;
+  const { date } = request.query;
+
+  const dateFormat = new Date(date + " 00:00");
+
+  const statement = customer.statement.filter((statement) => statement.created_at.toDateString() === new Date(dateFormat).toDateString())
+
+  return response.json(statement);
+});
 
 const PORT = 3333;
 app.listen(PORT, () => console.log(`Server is running on Port ${PORT} `));
