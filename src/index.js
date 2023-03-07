@@ -122,7 +122,15 @@ app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
   const { customer } = request;
 
   return response.json(customer)
-})
+});
+
+app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request;
+
+  customers.splice(customer, 1);
+
+  return response.status(200).json(customers);
+});
 
 const PORT = 3333;
 app.listen(PORT, () => console.log(`Server is running on Port ${PORT} `));
